@@ -30,10 +30,10 @@ namespace MvcSeguridadCubosJPL.Controllers
         }
         [HttpPost]
         //METODO PARA BUSCAR CUBO POR MARCA
-        public async Task<IActionResult> FindCuboAsync(string marca)
+        public async  Task<ActionResult<List<Cubo>>> FindCuboAsync(string marca)
         {
-            Cubo cubo = await this.service.FindCuboAsync(marca);
-            return View(cubo);
+            List<Cubo> cubos = await this.service.FindCuboAsync(marca);
+            return View(cubos);
         }
 
         [AuthorizeUsuarios]

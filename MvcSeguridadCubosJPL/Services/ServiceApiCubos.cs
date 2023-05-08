@@ -110,11 +110,11 @@ namespace MvcSeguridadCubosJPL.Services
         }
 
         //METODO PARA BUSCAR CUBO
-        public async Task<Cubo> FindCuboAsync(string marca)
+        public async Task <List<Cubo>> FindCuboAsync(string marca)
         {
             string request = "api/Cubos/" + marca;
-            Cubo cubo = await this.CallApiAsync<Cubo>(request);
-            return cubo;
+            List<Cubo> cubos = await this.CallApiAsync<List<Cubo>>(request);
+            return cubos;
         }
 
 
