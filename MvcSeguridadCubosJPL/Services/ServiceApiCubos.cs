@@ -101,9 +101,9 @@ namespace MvcSeguridadCubosJPL.Services
         //METODOS LIBRES
 
         //METODO PARA SACAR TODOS LOS CUBOS
-        public async Task<List<Cubo>> GetCubosAsync(string token)
+        public async Task<List<Cubo>> GetCubosAsync()
         {
-            string request = "api/Cubos";
+            string request = "api/Cubos/";
             List<Cubo> cubos =
                 await this.CallApiAsync<List<Cubo>>(request);
             return cubos;
@@ -116,6 +116,39 @@ namespace MvcSeguridadCubosJPL.Services
             Cubo cubo = await this.CallApiAsync<Cubo>(request);
             return cubo;
         }
+
+
+
+        //METODO PARA CREAR UN NUEVO CUBO
+        public async Task InsertCuboAsync
+        (int id, string nombre,
+            string marca, string imagen, int precio)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string request = "/api/cubos";
+                client.BaseAddress = new Uri(this.UrlApiCubos);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                //TENEMOS QUE ENVIAR UN OBJETO JSON
+                //NOS CREAMOS UN OBJETO DE LA CLASE DEPARTAMENTO
+                Cubo cubo = new Cubo();
+                cubo.IdCubo = id;
+                cubo.Nombre = nombre;
+                cubo.Marca = marca;
+                cubo.Imagen = imagen;
+                cubo.Precio = precio;
+                //CONVERTIMOS EL OBJETO A JSON
+                string json = JsonConvert.SerializeObject(cubo);
+
+                StringContent content =
+                    new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response =
+                    await client.PostAsync(request, content);
+            }
+        }
+
+
 
         //METODO PARA CREAR UN NUEVO USUARIO
         public async Task InsertUsuarioAsync
@@ -178,6 +211,15 @@ namespace MvcSeguridadCubosJPL.Services
 
         //METODOS PROTEGIDOS
 
+        //METODO PROTEGIDO PARA RECUPERAR EL PERFIL
+        public async Task<Usuario> GetPerfilUsuarioAsync
+            (string token)
+        {
+            string request = "/api/Usuarios/PerfilUsuario";
+            Usuario user = await
+                this.CallApiAsync<Usuario>(request, token);
+            return user;
+        }
 
     }
 }
